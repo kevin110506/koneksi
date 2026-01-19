@@ -1,10 +1,11 @@
 <?php
-include("koneksi.php");
-$hapus=mysqli_quert($koneksi,"DELETE FROM tamu WHERE id=$_GET[id]");
-    if($hapus){
-        header("location:index.php");
-    }else{
-        print "h=gagal menghapus data";
-    }
-?>    
-    
+include('koneksi.php');
+
+$nim = $_GET['nim'];
+$hapus = mysqli_query($koneksi, "DELETE FROM mahasiswa WHERE nim='$nim'");
+
+if ($hapus) {
+    header("Location: list.php");
+} else {
+    echo "Data gagal dihapus";
+}

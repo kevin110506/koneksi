@@ -1,62 +1,67 @@
 <?php
-// KONEKSI
-$koneksi = mysqli_connect("localhost", "root", "", "db_bukutamu");
+session_start();
+include('koneksi.php');
 
-if (!$koneksi) {
-    die("Koneksi gagal");
-}
-
-// HAPUS
-if (isset($_GET['hapus'])) {
-    $id = $_GET['hapus'];
-    mysqli_query($koneksi, "DELETE FROM tamu WHERE id='$id'");
-    header("location: index.php");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
     exit();
 }
-
-// QUERY
-$sql = "SELECT * FROM tamu";
-$result = mysqli_query($koneksi, $sql);
 ?>
 
+<!DOCTYPE html>
 <html>
-<head><title>Buku Tamu</title></head>
+<head>
+    <title>Data Program Studi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 <body>
-    <h1>BUKU TAMU</h1>
-    <a href="create.php">TAMBAH DATA</a>
-    <hr>
-    
-    <?php
-    // CEK APAKAH ADA DATA
-    if (mysqli_num_rows($result) > 0) {
-        echo "<table border='1' width='100%'>";
-        echo "<tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Email</th>
-                <th>Komentar</th>
-                <th>Aksi</th>
-              </tr>";
+    <div class="container mt-4">
+        <h2>Data Program Studi</h2>
         
-        $no = 1;
-        while($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>" . $no++ . "</td>";
-            echo "<td>" . $row['nama'] . "</td>";
-            echo "<td>" . $row['email'] . "</td>";
-            echo "<td>" . $row['komentar'] . "</td>";
-            echo "<td>
-                    <a href='edit.php?id=" . $row['id'] . "'>EDIT</a> | 
-                    <a href='index.php?hapus=" . $row['id'] . "' onclick='return confirm(\"Hapus?\")'>HAPUS</a>
-                  </td>";
-            echo "</tr>";
+        <div class="d-flex justify-content-between mb-3">
+            <a href="beranda.php" class="btn btn-secondary">Kembali ke Beranda</a>
+            <a href="list.php" class="btn btn-primary">Tambah Prodi</a>
+        </div>
+        
+        <?php
+        if(isset($_GET['success'])) {
+            echo '<div class="alert alert-success">'.$_GET['success'].'</div>';
         }
-        echo "</table>";
-    } else {
-        echo "<p>Tidak ada data. <a href='create.php'>Tambah data pertama</a></p>";
-    }
-    
-    mysqli_close($koneksi);
-    ?>
+        ?>
+        
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>No</th>
+                    <th>Nama Prodi</th>
+                    <th>Jenjang</th>
+                    <th>Keterangan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                include('koneksi.php');
+                $tampil = mysqli_query($koneksi, 'SELECT * FROM prodi ORDER BY id DESC');
+                $no = 1;
+                while ($data = mysqli_fetch_array($tampil)) {
+                ?>
+                <tr>
+                    <td><?php echo $no++; ?></td>
+                    <td><?php echo htmlspecialchars($data["nama_prodi"]); ?></td>
+                    <td><?php echo $data['jenjang']; ?></td>
+                    <td><?php echo htmlspecialchars($data['keterangan']); ?></td>
+                    <td>
+                        <a href="update1.php?id=<?php echo $data['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="hapus1.php?id=<?php echo $data['id']; ?>" class="btn btn-danger btn-sm" 
+                           onclick="return confirm('Hapus data prodi?')">Hapus</a>
+                    </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

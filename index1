@@ -1,0 +1,55 @@
+<?php
+session_start();
+include('koneksi.php');
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sistem Akademik</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .menu-box {
+            padding: 30px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3>Sistem Akademik</h3>
+                <p>Halo, <?php echo $_SESSION['nama']; ?> | 
+                    <a href="editprofil.php">Edit Profil</a> | 
+                    <a href="logout.php">Logout</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="menu-box">
+                    <h4>Data Mahasiswa</h4>
+                    <p>Kelola data mahasiswa</p>
+                    <a href="list.php" class="btn btn-primary">Buka</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="menu-box">
+                    <h4>Data Prodi</h4>
+                    <p>Kelola data program studi</p>
+                    <a href="prodi/index.php" class="btn btn-primary">Buka</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
